@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>habitus insight Inc.</title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        background-image: url("./ourhabitus_main.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans KR",
+          "Apple SD Gothic Neo", Arial, sans-serif;
+        cursor: none;
+      }
+
+      #cursor {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 9999px;
+        background: rgba(0, 0, 0, 0.55);
+        pointer-events: none;
+        transform: translate(-50%, -50%);
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 120ms ease;
+      }
+
+      .title {
+        position: fixed;
+        top: 32px;
+        left: 32px;
+        font-weight: 800;
+        font-size: 10vw;
+        line-height: 0.95;
+        letter-spacing: 0.02em;
+        color: rgba(255, 255, 255, 0.72);
+        text-transform: none;
+        user-select: none;
+      }
+
+      .corp {
+        position: fixed;
+        right: 24px;
+        bottom: 20px;
+        max-width: min(560px, calc(100vw - 48px));
+        font-size: 14px;
+        line-height: 1.55;
+        color: rgba(255, 255, 255, 0.75);
+        text-align: right;
+        user-select: text;
+      }
+
+      @media (max-width: 480px) {
+        .title {
+          top: 20px;
+          left: 20px;
+        }
+
+        .corp {
+          right: 16px;
+          bottom: 14px;
+          font-size: 11px;
+        }
+      }
+
+      @media (hover: none) {
+        body {
+          cursor: auto;
+        }
+
+        #cursor {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="cursor" aria-hidden="true"></div>
+    <div class="title">
+      habitus<br />
+      insight<br />
+      inc.
+    </div>
+
+    <div class="corp">
+      <div>회사명: (주)아비투스인사이트</div>
+      <div>대표이사: 오윤록</div>
+      <div>사업자번호: 1234-1234-1234</div>
+      <div>주소: 서울시 강남구 선릉로 611</div>
+      <div>문의: ourhabitus@ourhabitus.app</div>
+    </div>
+
+    <script>
+      (function () {
+        const cursor = document.getElementById("cursor");
+        const corp = document.querySelector(".corp");
+        if (!cursor) return;
+
+        let targetX = 0;
+        let targetY = 0;
+        let currentX = 0;
+        let currentY = 0;
+        let visible = false;
+
+        const onMove = (e) => {
+          targetX = e.clientX;
+          targetY = e.clientY;
+          if (!visible) {
+            visible = true;
+            cursor.style.opacity = "1";
+          }
+        };
+
+        const onLeave = () => {
+          visible = false;
+          cursor.style.opacity = "0";
+        };
+
+        const disableCustomCursor = () => {
+          cursor.style.display = "none";
+          document.body.style.cursor = "auto";
+        };
+
+        const enableCustomCursor = () => {
+          cursor.style.display = "block";
+          document.body.style.cursor = "none";
+        };
+
+        const tick = () => {
+          currentX += (targetX - currentX) * 0.25;
+          currentY += (targetY - currentY) * 0.25;
+          cursor.style.left = currentX + "px";
+          cursor.style.top = currentY + "px";
+          requestAnimationFrame(tick);
+        };
+
+        window.addEventListener("mousemove", onMove, { passive: true });
+        window.addEventListener("mouseenter", onMove, { passive: true });
+        window.addEventListener("mouseleave", onLeave, { passive: true });
+
+        if (corp) {
+          corp.addEventListener("mouseenter", disableCustomCursor, { passive: true });
+          corp.addEventListener("mouseleave", enableCustomCursor, { passive: true });
+        }
+
+        requestAnimationFrame(tick);
+      })();
+    </script>
+  </body>
+</html>
